@@ -18,7 +18,15 @@ try:
 except Exception as e:
     st.error(f"ERROR DNS: {e}")
     st.stop()
-
+try:
+    supabase = create_client(
+        st.secrets["SUPABASE_URL"],
+        st.secrets["SUPABASE_KEY"]
+    )
+    supabase.table("deportistas").select("*").limit(1).execute()
+    st.success("CONEXIÓN SUPABASE CORRECTA")
+except Exception as e:
+    st.error(f"ERROR SUPABASE: {e}")
 
 def obtener_deportistas():
     r = supabase.table("deportistas").select("id,nombre,fecha_registro").order("nombre").execute()
