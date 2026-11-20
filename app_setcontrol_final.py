@@ -51,7 +51,9 @@ def guardar_entrenamiento(datos):
         "peso": peso, "serie": series, "repeticiones": reps, "rir": rir,
         "volumen": volumen, "rm_estimado": rm
     }
-    return supabase.table("entrenamientos").insert(registro).execute()
+    return supabase.table("entrenamientos").insert(
+    registro, returning="minimal"
+).execute()
 
 
 def actualizar_entrenamiento(registro_id, deportista, ejercicio, peso, series, reps, rir):
