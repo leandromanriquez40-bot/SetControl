@@ -6,15 +6,17 @@ from postgrest.exceptions import APIError
 
 st.set_page_config(page_title="SetControl", page_icon="💪", layout="wide")
 
-@st.cache_resource
-def conectar_supabase():
-    return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+from urllib.parse import urlparse
+import socket
+
+url = st.secrets["SUPABASE_URL"].strip()
+host = urlparse(url).hostname
 
 try:
-    supabase = conectar_supabase()
+    socket.getaddrinfo(host, 443)
+    st.success("CONEXIÓN DNS CORRECTA")
 except Exception as e:
-    st.error("No se pudo conectar con Supabase. Revisa los Secrets de Streamlit.")
-    st.caption(str(e))
+    st.error(f"ERROR DNS: {e}")
     st.stop()
 
 
