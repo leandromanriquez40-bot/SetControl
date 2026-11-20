@@ -6,27 +6,12 @@ from postgrest.exceptions import APIError
 
 st.set_page_config(page_title="SetControl", page_icon="💪", layout="wide")
 
-from urllib.parse import urlparse
-import socket
 
-url = st.secrets["SUPABASE_URL"].strip()
-host = urlparse(url).hostname
+supabase = create_client(
+    st.secrets["SUPABASE_URL"],
+    st.secrets["SUPABASE_KEY"]
+)
 
-try:
-    socket.getaddrinfo(host, 443)
-    st.success("CONEXIÓN DNS CORRECTA")
-except Exception as e:
-    st.error(f"ERROR DNS: {e}")
-    st.stop()
-try:
-    supabase = create_client(
-        st.secrets["SUPABASE_URL"],
-        st.secrets["SUPABASE_KEY"]
-    )
-    supabase.table("deportistas").select("*").limit(1).execute()
-    st.success("CONEXIÓN SUPABASE CORRECTA")
-except Exception as e:
-    st.error(f"ERROR SUPABASE: {e}")
 
 def obtener_deportistas():
     r = supabase.table("deportistas").select("id,nombre,fecha_registro").order("nombre").execute()
